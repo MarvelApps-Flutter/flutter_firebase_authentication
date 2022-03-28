@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:email_login_app/constants/app_constants.dart';
 import 'package:email_login_app/data/food_data.dart';
 import 'package:email_login_app/models/food_model.dart';
 import 'package:email_login_app/providers/facebook_signin_provider.dart';
@@ -18,19 +19,28 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<String> imgList = [
-    'assets/images/image1.jpg',
-    'assets/images/image2.jpg',
-    'assets/images/image3.jpg',
-    'assets/images/image4.jpg',
-  ];
-  int pageIndex = 0;
-  List<Widget> imageSliders = [];
-  final List<FoodModel> _foods = foods;
+  List<String>? imgList;
+  int? pageIndex;
+  List<Widget>? imageSliders;
+  List<FoodModel>? _foods;
   bool? isLinkedInLoggedIn;
   bool? isFacebookLoggedIn;
-  void initSlider() {
-    imageSliders = imgList
+
+  void init() {
+    isLinkedInLoggedIn = StoreDetails.checkLinkedInLoginSession(
+        StoreDetails.isUserLinkedInLoggedIn);
+    isFacebookLoggedIn = StoreDetails.checkFacebookLoginSession(
+        StoreDetails.isUserFacebookLoggedIn);
+    pageIndex = 0;
+    imageSliders = [];
+    _foods = foods;
+    imgList = [
+      AppConstants.firstAssetImageString,
+      AppConstants.secondAssetImageString,
+      AppConstants.thirdAssetImageString,
+      AppConstants.fourthAssetImageString,
+    ];
+    imageSliders = imgList!
         .map((item) => Container(
               child: Container(
                 color: Colors.white,
@@ -68,11 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    isLinkedInLoggedIn = StoreDetails.checkLinkedInLoginSession(
-        StoreDetails.isUserLinkedInLoggedIn);
-    isFacebookLoggedIn = StoreDetails.checkFacebookLoginSession(
-        StoreDetails.isUserFacebookLoggedIn);
-    initSlider();
+    init();
     super.initState();
   }
 
@@ -97,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
           foodCategoryHeading(),
           buildSizedBoxWidget(20),
           Column(
-            children: _foods.map(buildFoodCategory).toList(),
+            children: _foods!.map(buildFoodCategory).toList(),
           )
         ],
       )),
@@ -111,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
       elevation: 0.0,
       title: const Center(
         child: Text(
-          "Home",
+          AppConstants.homeString,
           style: AppTextStyles.mediumBlackTextStyle,
         ),
       ),
@@ -135,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
           onPressed: () {
             if (FirebaseAuth.instance.currentUser != null) {
               FirebaseAuth.instance.signOut().then((value) {
-                print("Signed Out");
+                print(AppConstants.signedOutString);
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => const LoginScreen()),
@@ -183,14 +189,14 @@ class _HomeScreenState extends State<HomeScreen> {
           Padding(
             padding: EdgeInsets.only(left: 10),
             child: Text(
-              "Food Category",
+              AppConstants.foodCategoryString,
               style: AppTextStyles.boldTextStyle,
             ),
           ),
           Padding(
             padding: EdgeInsets.only(right: 15),
             child: Text(
-              "View All",
+              AppConstants.viewAllString,
               style: AppTextStyles.mediumTextStyle,
             ),
           ),

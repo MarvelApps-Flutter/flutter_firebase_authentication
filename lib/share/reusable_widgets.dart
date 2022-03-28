@@ -1,3 +1,4 @@
+import 'package:email_login_app/constants/app_constants.dart';
 import 'package:email_login_app/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -47,7 +48,7 @@ Widget navigationTextWidget(BuildContext context, String initialText,
       ),
       InkWell(
         onTap: () {
-          if (laterText == "Login") {
+          if (laterText == AppConstants.smallLoginString) {
             Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (context) => screenName));
           } else {

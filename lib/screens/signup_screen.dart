@@ -1,3 +1,4 @@
+import 'package:email_login_app/constants/app_constants.dart';
 import 'home_screen.dart';
 import 'package:email_login_app/screens/login_screen.dart';
 import 'package:email_login_app/share/reusable_widgets.dart';
@@ -14,14 +15,31 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> with InputValidationMixin {
-  final auth = FirebaseAuth.instance;
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final formGlobalKey = GlobalKey<FormState>();
-  bool isUsernameErrorVisible = false;
-  bool isEmailErrorVisible = false;
-  bool isPasswordErrorVisible = false;
+  var auth;
+  TextEditingController? _emailController;
+  TextEditingController? _passwordController;
+  GlobalKey<FormState>? formGlobalKey;
+  bool? isUsernameErrorVisible;
+  bool? isEmailErrorVisible;
+  bool? isPasswordErrorVisible;
   late AppConfig _ac;
+
+  init()
+  {
+    auth = FirebaseAuth.instance;
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+    formGlobalKey = GlobalKey<FormState>();
+    isUsernameErrorVisible = false;
+    isEmailErrorVisible = false;
+    isPasswordErrorVisible = false;
+  }
+
+  @override
+  void initState() {
+    init();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     _ac = AppConfig(context);
@@ -41,17 +59,17 @@ class _SignUpScreenState extends State<SignUpScreen> with InputValidationMixin {
                     width: _ac.rW(60),
                     decoration: const BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage("assets/images/headers.jpg"),
+                        image: AssetImage(AppConstants.headersAssetImageString),
                         fit: BoxFit.fill,
                         //repeat:ImageRepeat.repeat,
                       ),
                     ),
                   ),
                   buildSizedBoxWidget(10),
-                  const Text("Sign Up Now", style: AppTextStyles.blackTextStyle),
+                  const Text(AppConstants.signUpNowString, style: AppTextStyles.blackTextStyle),
                   buildSizedBoxWidget(13),
                   const Text(
-                    "Please enter the details below to continue",
+                    AppConstants.enterDetailString,
                     style: AppTextStyles.lightTextStyle,
                   ),
                   buildSizedBoxWidget(15),
@@ -59,17 +77,17 @@ class _SignUpScreenState extends State<SignUpScreen> with InputValidationMixin {
                   buildSizedBoxWidget(10),
                   buildPasswordTextField(),
                   buildSizedBoxWidget(15),
-                  buildButtonWidget(context, "SIGN UP", () {
-                    if (formGlobalKey.currentState!.validate()) {
-                      if (_emailController.text.toString().trim().length != 0 &&
-                          _passwordController.text.toString().trim().length !=
+                  buildButtonWidget(context, AppConstants.capitalSignUpString, () {
+                    if (formGlobalKey!.currentState!.validate()) {
+                      if (_emailController!.text.toString().trim().length != 0 &&
+                          _passwordController!.text.toString().trim().length !=
                               0) {
                         Future.delayed(Duration(seconds: 4));
-                        EasyLoading.show(status: 'Please Wait...');
+                        EasyLoading.show(status: AppConstants.pleaseWaitString);
                         auth
                             .createUserWithEmailAndPassword(
-                                email: _emailController.text,
-                                password: _passwordController.text)
+                                email: _emailController!.text,
+                                password: _passwordController!.text)
                             .then((value) {
                           Navigator.pushAndRemoveUntil(
                             context,
@@ -77,18 +95,17 @@ class _SignUpScreenState extends State<SignUpScreen> with InputValidationMixin {
                                 builder: (context) => const HomeScreen()),
                             (route) => false,
                           );
-                          EasyLoading.showSuccess('Registered Successfully...');
+                          EasyLoading.showSuccess(AppConstants.registeredSuccessfullyString);
                           EasyLoading.dismiss();
                         }).onError((error, stackTrace) {
                           EasyLoading.showError(error.toString());
-                          print("Error ${error.toString()}");
                           EasyLoading.dismiss();
                         });
                       }
                     }
                   }),
-                  navigationTextWidget(context, "You already have an account!",
-                      const LoginScreen(), "Login"),
+                  navigationTextWidget(context, AppConstants.alreadyHaveAnAccountString,
+                      const LoginScreen(), AppConstants.smallLoginString),
                 ],
               ),
             ),
@@ -109,7 +126,7 @@ class _SignUpScreenState extends State<SignUpScreen> with InputValidationMixin {
           Icons.person,
           color: Colors.grey,
         ),
-        labelText: "Enter Email",
+        labelText: AppConstants.enterEmailString,
         labelStyle: TextStyle(color: Colors.grey.withOpacity(0.9)),
         filled: true,
         floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -124,7 +141,7 @@ class _SignUpScreenState extends State<SignUpScreen> with InputValidationMixin {
          }
         else
           {
-            return 'Enter a valid email address';
+            return AppConstants.enterValidEmailString;
           }
       },
     );
@@ -142,7 +159,7 @@ class _SignUpScreenState extends State<SignUpScreen> with InputValidationMixin {
           Icons.lock,
           color: Colors.grey,
         ),
-        labelText: "Enter Password",
+        labelText: AppConstants.enterPasswordString,
         labelStyle: TextStyle(color: Colors.grey.withOpacity(0.9)),
         filled: true,
         floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -157,7 +174,7 @@ class _SignUpScreenState extends State<SignUpScreen> with InputValidationMixin {
          }
         else
           {
-            return 'Enter a valid password';
+            return AppConstants.enterValidPasswordString;
           }
       },
     );

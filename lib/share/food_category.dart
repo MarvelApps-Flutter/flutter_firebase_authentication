@@ -1,3 +1,4 @@
+import 'package:email_login_app/constants/app_constants.dart';
 import 'package:email_login_app/utils/app_config.dart';
 import 'package:email_login_app/utils/app_text_styles.dart';
 import 'package:email_login_app/utils/star_display.dart';
@@ -93,7 +94,7 @@ class _FoodCategoryState extends State<FoodCategory> {
                       style: AppTextStyles.boldWhiteTextStyle,
                     ),
                     const Text(
-                      "Min Order",
+                      AppConstants.minOrderString,
                       style: AppTextStyles.mediumWhiteTextStyle,
                     ),
                   ],

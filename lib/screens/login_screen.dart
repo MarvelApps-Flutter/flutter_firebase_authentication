@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'package:email_login_app/constants/app_constants.dart';
 import 'home_screen.dart';
 import 'package:email_login_app/mixins/validate_mixin.dart';
 import 'package:email_login_app/models/user_object.dart';
@@ -10,7 +10,6 @@ import 'package:email_login_app/utils/app_config.dart';
 import 'package:email_login_app/utils/app_text_styles.dart';
 import 'package:email_login_app/utils/store_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:linkedin_login/linkedin_login.dart';
@@ -24,17 +23,37 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
-  final auth = FirebaseAuth.instance;
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final formGlobalKey = GlobalKey<FormState>();
-  bool isEmailErrorVisible = false;
-  bool isPasswordErrorVisible = false;
+  var auth;
+  TextEditingController? _emailController;
+  TextEditingController? _passwordController;
+  GlobalKey<FormState>? formGlobalKey;
+  bool? isEmailErrorVisible;
+  bool? isPasswordErrorVisible;
   late AppConfig appC;
-  String redirectUrl = 'https://www.youtube.com/callback';
-  String clientId = '86n7nmswa9d9mu';
-  String clientSecret = 'cFH2ZE9qEZw87Qvw';
+  String? redirectUrl;
+  String? clientId;
+  String? clientSecret;
   UserObject? user;
+
+  init()
+  {
+    auth = FirebaseAuth.instance;
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+    formGlobalKey = GlobalKey<FormState>();
+    isEmailErrorVisible = false;
+    isPasswordErrorVisible = false;
+    redirectUrl = AppConstants.redirectUrlString;
+    clientId = AppConstants.clientIdString;
+    clientSecret = AppConstants.clientSecretString;
+  }
+
+  @override
+  void initState() {
+    init();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     appC = AppConfig(context);
@@ -54,16 +73,16 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                     width: appC.rW(60),
                     decoration: const BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage("assets/images/headers.jpg"),
+                        image: AssetImage(AppConstants.headerAssetImageString),
                         fit: BoxFit.fill,
                       ),
                     ),
                   ),
                   buildSizedBoxWidget(10),
-                  const Text("Login Now", style: AppTextStyles.blackTextStyle),
+                  const Text(AppConstants.loginNowString, style: AppTextStyles.blackTextStyle),
                   buildSizedBoxWidget(13),
                   const Text(
-                    "Please enter the details below to continue",
+                    AppConstants.enterDetailString,
                     style: AppTextStyles.lightTextStyle,
                   ),
                   buildSizedBoxWidget(15),
@@ -71,17 +90,17 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                   buildSizedBoxWidget(10),
                   buildPasswordTextField(),
                   buildSizedBoxWidget(15),
-                  buildButtonWidget(context, "LOGIN", () {
-                    if (formGlobalKey.currentState!.validate()) {
-                      if (_emailController.text.toString().trim().length != 0 &&
-                          _passwordController.text.toString().trim().length !=
+                  buildButtonWidget(context, AppConstants.capitalLoginString, () {
+                    if (formGlobalKey!.currentState!.validate()) {
+                      if (_emailController!.text.toString().trim().length != 0 &&
+                          _passwordController!.text.toString().trim().length !=
                               0) {
                         Future.delayed(Duration(seconds: 4));
-                        EasyLoading.show(status: 'Please Wait...');
+                        EasyLoading.show(status: AppConstants.pleaseWaitString);
                         auth
                             .signInWithEmailAndPassword(
-                                email: _emailController.text,
-                                password: _passwordController.text)
+                                email: _emailController!.text,
+                                password: _passwordController!.text)
                             .then((value) {
                           Navigator.pushAndRemoveUntil(
                             context,
@@ -89,20 +108,19 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                                 builder: (context) => const HomeScreen()),
                             (route) => false,
                           );
-                          EasyLoading.showSuccess('Logged in Successfully...');
+                          EasyLoading.showSuccess(AppConstants.loginSuccessfullyString);
                           EasyLoading.dismiss();
                         }).onError((error, stackTrace) {
                           Future.delayed(Duration(seconds: 2));
-                          EasyLoading.showError('User does not exist');
-                          print("Error ${error.toString()}");
+                          EasyLoading.showError(AppConstants.userDoesNotExistString);
                           EasyLoading.dismiss();
                         });
                       }
                     }
                   }),
                   _buildSignInWithText(),
-                  navigationTextWidget(context, "Don't have account?",
-                      SignUpScreen(), "Register"),
+                  navigationTextWidget(context, AppConstants.dontHaveAccountString,
+                      SignUpScreen(), AppConstants.registerString),
                 ],
               ),
             ),
@@ -124,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
                   height: 20,
                 )),
           ),
-          const Text("or", style: AppTextStyles.lightTextStyle),
+          const Text(AppConstants.orString, style: AppTextStyles.lightTextStyle),
           Expanded(
             child: Container(
                 margin: const EdgeInsets.only(left: 10.0, right: 10.0),
@@ -136,7 +154,7 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
         ]),
         const SizedBox(height: 20.0),
         const Text(
-          'Continue with Social Media',
+          AppConstants.continueWithSocialMediaString,
           style: AppTextStyles.lightTextStyle,
         ),
         _buildSocialBtnRow(),
@@ -167,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
               });
             },
             const AssetImage(
-              'assets/images/facebook.jpg',
+              AppConstants.facebookAssetImageString,
             ),
           ),
           _buildSocialBtn(
@@ -175,9 +193,9 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
               Provider.of<GoogleSignInProvider>(context, listen: false)
                   .login()
                   .then((value) {
-                print("value is $value");
+
                 if (value != null) {
-                  EasyLoading.showSuccess('Logged in Successfully...');
+                  EasyLoading.showSuccess(AppConstants.loggedInSuccessfully);
                   EasyLoading.dismiss();
                   Navigator.pushAndRemoveUntil(
                     context,
@@ -188,16 +206,16 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
               });
             },
             const AssetImage(
-              'assets/images/google.png',
+              AppConstants.googleAssetImageString,
             ),
           ),
           _buildSocialBtn(
             () {
-              print('Login with LinkedIn');
+
               buildLinkedInlogin();
             },
             const AssetImage(
-              'assets/images/linkedIn.png',
+              AppConstants.linkedInAssetImageString,
             ),
           ),
         ],
@@ -211,7 +229,7 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
       MaterialPageRoute(
         builder: (BuildContext context) => LinkedInUserWidget(
           appBar: AppBar(
-            title: const Text('LinkedIn Login'),
+            title: const Text(AppConstants.linkedInLogin),
           ),
           destroySession: false,
           redirectUrl: redirectUrl,
@@ -226,10 +244,10 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
             ProjectionParameters.profilePicture,
           ],
           onError: (UserFailedAction e) {
-            print('Error: ${e.stackTrace.toString()}');
+
           },
           onGetUserProfile: (UserSucceededAction linkedInUser) {
-            print('Access token ${linkedInUser.user.token.accessToken}');
+
             user = UserObject(
               firstName: linkedInUser.user.firstName!.localized!.label!,
               lastName: linkedInUser.user.lastName!.localized!.label!,
@@ -271,12 +289,12 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
 
   Widget _buildSignupBtn() {
     return GestureDetector(
-      onTap: () => print('Sign Up Button Pressed'),
+      onTap: () {},
       child: RichText(
         text: const TextSpan(
           children: [
             TextSpan(
-              text: 'Don\'t have an Account? ',
+              text: AppConstants.dontHaveAccountAnString,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18.0,
@@ -284,7 +302,7 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
               ),
             ),
             TextSpan(
-              text: 'Sign Up',
+              text: AppConstants.signUpString,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18.0,
@@ -308,7 +326,7 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
           Icons.person,
           color: Colors.grey,
         ),
-        labelText: "Enter Email",
+        labelText: AppConstants.enterEmailString,
         labelStyle: TextStyle(color: Colors.grey.withOpacity(0.9)),
         filled: true,
         floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -323,7 +341,7 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
           }
         else
           {
-            return 'Enter a valid email address';
+            return AppConstants.enterValidEmailString;
           }
       },
     );
@@ -341,7 +359,7 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
           Icons.lock,
           color: Colors.grey,
         ),
-        labelText: "Enter Password",
+        labelText: AppConstants.enterPasswordString,
         labelStyle: TextStyle(color: Colors.grey.withOpacity(0.9)),
         filled: true,
         floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -354,12 +372,10 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
           {
             return null;
           }
-
         else
           {
-            return 'Enter a valid password';
+            return AppConstants.enterValidPasswordString;
           }
-
       },
     );
   }

@@ -16,7 +16,6 @@ class GoogleSignInProvider extends ChangeNotifier{
   Future login() async{
     isSigningIn = true;
     final user = await googleSignIn.signIn();
-    print("user info");
     print(user);
     if(user == null)
     {
@@ -26,7 +25,6 @@ class GoogleSignInProvider extends ChangeNotifier{
     else{
 
       final googleAuth = await user.authentication;
-      print("googleAuth info");
       print(googleAuth);
       final credential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,

@@ -1,3 +1,4 @@
+import 'package:email_login_app/constants/app_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -8,19 +9,17 @@ class FacebookSignInProvider extends ChangeNotifier
   final FirebaseAuth _auth = FirebaseAuth.instance;
   login() async {
     var result = await FacebookAuth.instance.login(
-      permissions: ["public_profile", "email"],
+      permissions: [AppConstants.publicProfileString, AppConstants.emailString],
     );
 
     // check the status of our login
     if (result.status == LoginStatus.success) {
       final requestData = await FacebookAuth.instance.getUserData(
-        fields: "email, name, picture",
+        fields: "${AppConstants.emailString}, ${AppConstants.nameString}, ${AppConstants.pictureString}",
       );
 
       userData = requestData;
-      String email = userData?['email'];
-      print("email as $email");
-
+      String email = userData?[AppConstants.emailString];
       notifyListeners();
       return userData;
     }
