@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
+<dict>  
+    <key>CFBundleURLTypes</key>
+    <array>
+	        <dict>
+		         <key>CFBundleTypeRole</key>
+		         <string>Editor</string>
+		         <key>CFBundleURLSchemes</key>
+		         <array>
+			          <string>com.googleusercontent.apps.815762540704-lmvrq50u71drp31b9qu1l45hpqbdis78</string>
+		         </array>
+	        </dict>
+            <dict>
+                <key>CFBundleURLSchemes</key>
+                <array>
+                     <string>fb471422667908288</string>
+                </array>
+            </dict>
+    </array>
+    <key>FacebookAppID</key>
+    <string>471422667908288</string>
+    <key>FacebookClientToken</key>
+    <string>f2443fbe26b65e11d842a56030acd315</string>
+    <key>FacebookDisplayName</key>
+    <string>Facebook Login</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Email Login App</string>
+	<string>Social Login</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,7 +36,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>email_login_app</string>
+	<string>Social Login</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -43,5 +66,22 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+	<!-- Put me in the [my_project]/ios/Runner/Info.plist file -->
+    <!-- Google Sign-in Section -->
+    <!-- <key>CFBundleURLTypes</key>
+    <array>
+	<dict>
+		<key>CFBundleTypeRole</key>
+		<string>Editor</string>
+		<key>CFBundleURLSchemes</key>
+		<array>
+			
+			<string>com.googleusercontent.apps.815762540704-lmvrq50u71drp31b9qu1l45hpqbdis78</string>
+		</array>
+	</dict>
+    </array>  -->
+
 </dict>
 </plist>

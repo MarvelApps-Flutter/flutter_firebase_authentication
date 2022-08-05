@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:email_login_app/constants/app_constants.dart';
+import 'package:email_login_app/screens/splash_screen.dart';
+import 'firebase_option.dart';
 import 'screens/home_screen.dart';
 import 'package:email_login_app/providers/facebook_signin_provider.dart';
 import 'package:email_login_app/providers/google_signin_provider.dart';
@@ -13,7 +17,13 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  if (Platform.isIOS) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } else {
+    await Firebase.initializeApp();
+  }
   await StoreDetails.init();
   runApp(const MyApp());
   configLoading();
@@ -24,10 +34,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    User? user = FirebaseAuth.instance.currentUser;
-
-    bool isLinkedInLoggedIn = StoreDetails.checkLinkedInLoginSession(StoreDetails.isUserLinkedInLoggedIn);
-    bool isFacebookLoggedIn = StoreDetails.checkFacebookLoginSession(StoreDetails.isUserFacebookLoggedIn);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -43,7 +49,10 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: user != null || isLinkedInLoggedIn == true || isFacebookLoggedIn == true ? const HomeScreen(): const LoginScreen(),
+       // home: user != null || isLinkedInLoggedIn == true || isFacebookLoggedIn == true ? const HomeScreen(): const LoginScreen(),
+        
+         home: const SplashScreen(),
+      
         builder: EasyLoading.init(),
       ),
     );

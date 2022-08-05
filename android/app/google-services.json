@@ -37,6 +37,13 @@
             {
               "client_id": "815762540704-l9g9bpfjtlpam3kg05iro9ooef4olenm.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "815762540704-lmvrq50u71drp31b9qu1l45hpqbdis78.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.emailLoginApp"
+              }
             }
           ]
         }
