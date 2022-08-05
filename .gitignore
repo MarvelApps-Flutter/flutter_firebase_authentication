@@ -52,3 +52,6 @@ ios/Runner/GoogleService-Infos.plist
 
 #firebase options.dart
 lib/firebase_option.dart
+
+#info.plist
+ios/Runner/Infos.plist
