@@ -1,4 +1,6 @@
 import 'package:email_login_app/constants/app_constants.dart';
+import 'package:the_apple_sign_in/apple_sign_in_button.dart' as appleSignConst;
+import '../providers/apple_signin_provider.dart';
 import 'home_screen.dart';
 import 'package:email_login_app/mixins/validate_mixin.dart';
 import 'package:email_login_app/models/user_object.dart';
@@ -158,6 +160,23 @@ class _LoginScreenState extends State<LoginScreen> with InputValidationMixin {
           style: AppTextStyles.lightTextStyle,
         ),
         _buildSocialBtnRow(),
+        const SizedBox(height: 10.0),
+        SizedBox(
+           width: 250,
+          child: appleSignConst.AppleSignInButton(
+              cornerRadius: 26,
+              style: appleSignConst.ButtonStyle.black,
+              type: appleSignConst.ButtonType.signIn,
+              buttonText: "",
+              onPressed: (){
+                Provider.of<AppleSigninProvider>(context, listen: false)
+                    .login()
+                    .then((value) {
+                      print("value is $value");
+                    });
+              },
+            ),
+        ),
         _buildSignupBtn(),
       ],
     );
